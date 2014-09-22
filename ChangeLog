@@ -1,1 +1,5 @@
-Version 1.0 2014-09-21 Auguest 2014 Poduction Version
+Version 1.1 2014-09-21 First attempt to reduce unneeded FAX calls. Still don't
+                       underststand why first chain.GetEntries() seems to be
+		       required.
+		       
+Version 1.0 2014-09-21 August 2014 Production Version
