@@ -1,0 +1,24 @@
+# Requires use of -disable option on condor_submit.
+Universe                = Vanilla
+
+Executable              = SMWZd3pdExample_run.sh
+
+Input_File_Type         = $ENV(Input_File_Type)
+Job_Type                = $ENV(Job_Type)
+Start                   = $ENV(Start)
+ROOT_Version            = $ENV(ROOT_Version)
+XRootD_Version          = $ENV(XRootD_Version)
+X509_USER_PROXY         = Dummy1
+RUCIO_ACCOUNT           = Dummy2
+Arguments               = $(Input_File_Type) $(Job_Type) $(Start) $(ROOT_Version) $(XRootD_Version) $(X509_USER_PROXY) $(RUCIO_ACCOUNT)
+
+Padded_Process          = $$([strcat(substr(\"0000\",size(string(1+$(Process)))),string(1+$(Process)))])
+Log                     = SMWZd3pdExample_$(Input_File_Type)_$(Cluster).log
+Output                  = SMWZd3pdExample_$(Input_File_Type)_$(Cluster)_$(Padded_Process).log
+Error                   = SMWZd3pdExample_$(Input_File_Type)_$(Cluster)_$(Padded_Process).log
+ 
+Notification            = Never
+
+Requirements            = (SlotID > 8)
+Number_of_Jobs          = $ENV(Number_of_Jobs)
+Queue $(Number_of_Jobs)

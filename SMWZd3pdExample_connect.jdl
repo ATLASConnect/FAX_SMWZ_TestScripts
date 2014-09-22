@@ -1,0 +1,35 @@
+# Requires use of -disable option on condor_submit.
+Universe                = Vanilla
+
++ProjectName            = "atlas-org-indiana"
+Requirements            = (HAS_CVMFS)
+
+Executable              = SMWZd3pdExample_run.sh
+
+Input_File_Type         = $ENV(Input_File_Type)
+Job_Type                = $ENV(Job_Type)
+Start                   = $ENV(Start)
+ROOT_Version            = $ENV(ROOT_Version)
+XRootD_Version          = $ENV(XRootD_Version)
+X509_USER_PROXY         = x509_Proxy
+RUCIO_ACCOUNT           = $ENV(RUCIO_ACCOUNT)
+Arguments               = $(Input_File_Type) $(Job_Type) $(Start) $(ROOT_Version) $(XRootD_Version) $(X509_USER_PROXY) $(RUCIO_ACCOUNT)
+
+Should_Transfer_Files   = Yes
+
+Input_File              = input_$(Input_File_Type).txt
+Transfer_Input_Files    = x509_Proxy, SMWZd3pdExample.lib.tgz, $(Input_File)
+
+Transfer_Output         = True
+Transfer_Output_Files   = SMWZd3pdExample_$(Input_File_Type)_$(Cluster)_$(Padded_Process).root
+When_To_Transfer_Output = ON_Exit
+
+Padded_Process          = $$([strcat(substr(\"0000\",size(string(1+$(Process)))),string(1+$(Process)))])
+Log                     = SMWZd3pdExample_$(Input_File_Type)_$(Cluster).log
+Output                  = SMWZd3pdExample_$(Input_File_Type)_$(Cluster)_$(Padded_Process).log
+Error                   = SMWZd3pdExample_$(Input_File_Type)_$(Cluster)_$(Padded_Process).log
+ 
+Notification            = Never
+
+Number_of_Jobs          = $ENV(Number_of_Jobs)
+Queue $(Number_of_Jobs)

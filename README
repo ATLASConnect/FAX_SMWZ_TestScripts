@@ -1,0 +1,131 @@
+FAX Testing Scripts for a Condor Queing System
+
+V0.0 Frederick Luehring 04-Aug-2014 First Version for FAX access from local node
+                                    and by using condor_flocking to sent  job
+                                    to MWT2. prun job submission is supported
+                                    and will be documented soon.
+
+This version of the scripts is demontrates reading data from local files and
+from distributed XRootD (AKA FAX). All scripts are in zsh because that's what
+I know. I will endeavor to conver things to bash when I have time.
+
+Setting up the Environment
+==========================
+
+> source setup_alrb.sh
+> source_setup_fax.sh <options>
+> voms-proxy-init -voms atlas [-valid hh:mm] [-file <filename>}
+> voms-proxy-info -all
+> mkdir <work_area>
+> cd <work_area>
+> cp /afs/user/f/fredlu/public/Alden/* .
+
+The setup_fax.sh script arguments that allow one to specify the following
+paramenters:
+
+# -r ROOT version (default current-SL6)
+# -x XRootD Version (default current-SL6)
+# -X X509_USER_PROXY (defualt /tmp/x509up_u<uid>)
+# -R RUCIO_ACCOUNT (default $USER)
+
+NB: The path of the proxy file should be agree with any specification given
+for proxy file location should agree with the content of $X509_USER_PROXY
+
+NB: Do not extend the voms proxy with -hours option as this changes the
+lifetime of only one of two tokens and both must be extended to avoid failures
+
+Running Locally on Local Files
+==============================
+
+> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 1 -r root_version -x xrootd_version
+
+where:
+
+# -w Working Directory (default .)
+# -n Number of Jobs (default 1)
+# -i Input File Type (default smwz_p1328_p1329_rcc_FAX))
+# -j Job Type:  1 local batch using condor, local files, 2 local batch using condor, FAX files, 3 condor flocking using Bosco, 4 ATLAS Connect (default 3)
+# -r ROOT version (default current-SL6)
+# -x XRootD Version (default current-SL6)
+
+For example:
+
+source submit_jobset.sh -w smwz_p1328_p1329_bolt-specific_01 -n 11 -i local -j 1 -r 5.34.19-x86_64-slc6-gcc47-opt -x 3.3.6-x86_64-slc6 >& submit_smwz_p1328_p1329_bolt-specific_01.log &
+
+The file input_local.txt contains a list of text URIs specifying where on the
+local cluster the files are. A subdirectory called:
+
+smwz_p1328_p1329_bolt-specific_01/
+
+is created under the current directory and that's where the output log and root
+files are put.
+
+Running Locally on FAX Files
+============================
+
+> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 2 -r root_version -x xrootd_version -X X509_USER_PROXY -R RUCIO_ACCOUNT
+
+where:
+
+# -w Working Directory (default .)
+# -n Number of Jobs (default 1) 
+# -i Input File Type (default smwz_p1328_p1329_rcc_FAX))
+# -j Job Type:  1 local batch using condor, local files, 2 local batch using condor, FAX files, 3 condor flocking using Bosco, 4 ATLAS Connect (default 3)
+# -r ROOT version (default current-SL6)
+# -x XRootD Version (default current-SL6)
+# -X X509_USER_PROXY (defualt /tmp/x509up_u<uid>)
+# -R RUCIO_ACCOUNT (default $USER)
+
+A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
+Please set the tye Job Type to 2 - for example:
+
+source submit_jobset.sh -w smwz_p1328_p1329_bolt_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 2 -r 5.34.19-x86_64-slc6-gcc47-opt -x 3.3.6-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_bolt_FAX-specific_01.log &
+
+The file input_smwz_p1328_p1329.txt contains a list of text URIs specifying
+FAX type URIs: ${STORAGEPREFIX}/atlas/rucio/data12_8TeV:<filename.root>
+where the localSetupFAX supplies a reasonable value for
+$STORAGEPREFIX. For example: root://fax.mwt2.org/.
+
+A subdirectory called:
+
+smwz_p1328_p1329_bolt_FAX-specific_01/
+
+is created under the current directory and that's where the output log and root
+files are put. A total of 1886 jobs are run processing 732,026,805 events in
+18856 files. Only 1.4 TB are readout of the 260 TBs of data in the input files.
+The 260 TB is after decompression - the file occupy just over 90 TB compressed.
+
+Flocking to MWT2 Running on FAX Files
+=====================================
+
+> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 3 -r root_version -x xrootd_version -X X509_USER_PROXY -R RUCIO_ACCOUNT
+
+where:
+
+# -w Working Directory (default .)
+# -n Number of Jobs (default 1)
+# -i Input File Type (default smwz_p1328_p1329_rcc_FAX))
+# -j Job Type:  1 local batch using condor, local files, 2 local batch using condor, FAX files, 3 condor flocking using Bosco, 4 ATLAS Connect (default 3)
+# -r ROOT version (default current-SL6)
+# -x XRootD Version (default current-SL6)
+# -X X509_USER_PROXY (defualt /tmp/x509up_u<uid>)
+# -R RUCIO_ACCOUNT (default $USER)
+
+A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
+Please set the tye Job Type to 3 - for example:
+
+>  source submit_jobset.sh -w smwz_p1328_p1329_rcc_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 3 -r 5.34.19-x86_64-slc6-gcc47-opt -x 3.3.6-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_rcc_FAX-specific_01.log &
+
+The file input_smwz_p1328_p1329.txt contains a list of text URIs specifying
+FAX type URIs: ${STORAGEPREFIX}/atlas/rucio/data12_8TeV:<filename.root>
+where the localSetupFAX supplies a reasonable value for
+$STORAGEPREFIX. For example: root://fax.mwt2.org/.
+
+A subdirectory called:
+
+smwz_p1328_p1329_bolt_FAX-specific_01/
+
+is created under the current directory and that's where the output log and root
+files are put. A total of 1886 jobs are run processing 732,026,805 events in
+18856 files. Only 1.4 TB are readout of the 260 TBs of data in the input files.
+The 260 TB is after decompression - the file occupy just over 90 TB compressed.
