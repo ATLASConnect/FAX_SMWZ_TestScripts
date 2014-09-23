@@ -18,7 +18,7 @@ Setting up the Environment
 > voms-proxy-info -all
 > mkdir <work_area>
 > cd <work_area>
-> cp /afs/user/f/fredlu/public/Alden/* .
+> git clone git@github.com:ATLASConnect/FAX_SMWZ_TestScripts.git
 
 The setup_fax.sh script arguments that allow one to specify the following
 paramenters:
