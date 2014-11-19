@@ -10,7 +10,7 @@
 # Setup to get run time of this script.
 start=`date +%s`
 let "elapsed = start - ${3}"
-echo "Elapsed time waitng to start (s):" $elapsed
+echo "Startup wait time(s):" $elapsed
 echo
 echo "Input Arguments:" ${1} ${2} ${3} ${4} ${5} ${6} ${7}
 echo
@@ -114,6 +114,7 @@ output_seq_file=SMWZd3pdExample_${1}_${job_id}_${padded_task_id}.root
 tar xzf ${work_dir}/SMWZd3pdExample.lib.tgz
 
 sed -n ${first_line},${last_line}p ${work_dir}/${input_file} > ${work_dir}/${input_seq_file}
+/bin/cat ${work_dir}/${input_seq_file}
 bin/SMWZd3pdExample -f ${work_dir}/${input_seq_file} -o ${work_dir}/${output_seq_file}
 rm -f ${work_dir}/${input_seq_file}
 
@@ -144,4 +145,4 @@ esac
 echo
 end=`date +%s`
 let "elapsed = end - start"
-echo "Elapsed time since start of execution (s):" ${elapsed}
+echo "Execution time(s):" ${elapsed}
