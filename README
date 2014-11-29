@@ -1,23 +1,36 @@
 FAX Testing Scripts for a Condor Queing System
 
-V1.0 Frederick Luehring 19-Nov-2014 Second version of code that aborts if files
-                                    or events are skipped. Note that ROOT versions
-                                    5.34/21 and 5.34/22 had more read failures so
-                                    make ROOT 5.34/19 GCC 4.8, and XRootD 3.3.6
-                                    the default.
+V2.1   Frederick Luehring 29-Nov-2014 Use XRootD 4.1.0  which works without
+                                      problems. Commit version of code with minor
+                                      edits for GCC 4.8 compatibility.
 
-                                    Modify code to compile under GCC 4.8.
+V2.0   Frederick Luehring 19-Nov-2014 Second version of code that aborts if files
+                                      or events are skipped. Note that ROOT versions
+                                      5.34/21 and 5.34/22 had more read failures so
+                                      make ROOT 5.34/19 GCC 4.8, and XRootD 3.3.6
+                                      the default.
 
-V0.0 Frederick Luehring 04-Aug-2014 First Version for FAX access from local node
-                                    and by using condor_flocking to sent  job
-                                    to MWT2. prun job submission is supported
-                                    and will be documented soon.
+                                      Modify code to compile under GCC 4.8.
 
-NB: As of 19-Nov-2014 use ROOT version 5.34/19 or earlier and XRootD version
-4.0.4. The code works equally well with GCC 4.7 and 4.8. DO NOT use the 4
-series of XRootD, the resulting executable crashes with a stack dump. Using
-ROOT verions 5.34/21 and 5.34/22 leads to getting lots of read errors and
-huge log files full of error messages.
+V1.1.1 Frederick Luehring 23-Sep-2014 Minor cleaning and remove code from AFS.
+
+V1.0   Frederick Luehring 21-Sep-2014 Modify code to skip many unneeded ROOT/
+                                      XROOTD calls to lessen load on N2N server.
+                                      Still don't underststand why first
+                                      chain.GetEntries() is required.
+
+
+V0.0   Frederick Luehring 04-Aug-2014 First Version for FAX access from local node
+                                      and by using condor_flocking to sent  job
+                                      to MWT2. prun job submission is supported
+                                      and will be documented soon.
+
+ROOT 5.34/19, XRootD 4.1.0, SL(C)6, & GCC 4.1.0 appear to be good as of
+28-Nov-14. ROOT version 5.34/19 or earlier and XRootD version3.3.6 or earlier
+also work. The test code works equally well with GCC 4.7 and 4.8. DO NOT use
+the 4.0.x series of XRootD as the resulting executable crashes with a stack
+dump. Using ROOT verions 5.34/21 and 5.34/22 leads to getting lots of read
+errors and huge log files full of error messages (only tested with XRootD 3.3.6).
 
 This version of the scripts is demontrates reading data from local files and
 from distributed XRootD (AKA FAX). All scripts are in zsh because that's what
@@ -50,7 +63,7 @@ lifetime of only one of two tokens and both must be extended to avoid failures
 
 As of 19-November-2014 the recommended setup is:
 
-source ~/setup_fax.sh -r 5.34.19-x86_64-slc6-gcc48-opt -x 3.3.6-x86_64-slc6
+source ~/setup_fax.sh -r 5.34.19-x86_64-slc6-gcc48-opt -x 4.1.0-x86_64-slc6
 
 adding the -R option to set the RUCIO username as needed and the -X option
 to point at the X.509 proxy file if it is not at the default path.
@@ -71,7 +84,7 @@ where:
 
 For example:
 
-source submit_jobset.sh -w smwz_p1328_p1329_bolt-specific_01 -n 11 -i local -j 1 -r 5.34.19-x86_64-slc6-gcc48-opt -x 3.3.6-x86_64-slc6 >& submit_smwz_p1328_p1329_bolt-specific_01.log &
+source submit_jobset.sh -w smwz_p1328_p1329_bolt-specific_01 -n 11 -i local -j 1 -r 5.34.19-x86_64-slc6-gcc48-opt -x 4.1.0-x86_64-slc6 >& submit_smwz_p1328_p1329_bolt-specific_01.log &
 
 The file input_local.txt contains a list of text URIs specifying where on the
 local cluster the files are. A subdirectory called:
@@ -100,7 +113,7 @@ where:
 A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
 Please set the tye Job Type to 2 - for example:
 
-source submit_jobset.sh -w smwz_p1328_p1329_bolt_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 2 -r 5.34.19-x86_64-slc6-gcc48-opt -x 3.3.6-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_bolt_FAX-specific_01.log &
+source submit_jobset.sh -w smwz_p1328_p1329_bolt_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 2 -r 5.34.19-x86_64-slc6-gcc48-opt -x 4.1.0-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_bolt_FAX-specific_01.log &
 
 The file input_smwz_p1328_p1329.txt contains a list of text URIs specifying
 FAX type URIs: ${STORAGEPREFIX}/atlas/rucio/data12_8TeV:<filename.root>
@@ -135,7 +148,7 @@ where:
 A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
 Please set the tye Job Type to 3 - for example:
 
->  source submit_jobset.sh -w smwz_p1328_p1329_rcc_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 3 -r 5.34.19-x86_64-slc6-gcc48-opt -x 3.3.6-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_rcc_FAX-specific_01.log &
+>  source submit_jobset.sh -w smwz_p1328_p1329_rcc_FAX-specific_01 -n 1886 -i smwz_p1328_p1329 -j 3 -r 5.34.19-x86_64-slc6-gcc48-opt -x 4.1.0-x86_64-slc6 -X /tmp/x509_Proxy -R fredlu >& submit_smwz_p1328_p1329_rcc_FAX-specific_01.log &
 
 The file input_smwz_p1328_p1329.txt contains a list of text URIs specifying
 FAX type URIs: ${STORAGEPREFIX}/atlas/rucio/data12_8TeV:<filename.root>

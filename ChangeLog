@@ -1,8 +1,12 @@
+Version 2.1   2014-11-29 Production working version. Requires ROOT 5.34/19,
+                         XRootD 4.1.0, SL(C)6, & GCC 4.8.
+
+Version 2.0   2014-11-19 Code aborts if all events in all files are not read.
+
 Version 1.1.1 2014-09-23 Delete reference to my public afs space since the
                          code is in the ATLAS connect git repository.
 
-Version 1.1   2014-09-21 First attempt to reduce unneeded FAX calls. Still don't
-                         underststand why first chain.GetEntries() seems to be
-		         required.
+Version 1.1   2014-09-21 First attempt to reduce unneeded ROOT reads. Still don't
+                         underststand why first chain.GetEntries() is required.
 		       
-Version 1.0  2014-09-21 August 2014 Production Version
+Version 1.0   2014-09-21 August 4, 2014 Production Version (first Git commit).
