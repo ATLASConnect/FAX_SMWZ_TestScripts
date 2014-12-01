@@ -1,3 +1,7 @@
+Version 2.1.1 2014-11-30 Small changes for ROOT 6 compatibility. Default
+                         committed version is still ROOT 5.34/19,
+			 XRootD 4.1.0, SL(C)6, & GCC 4.8.
+
 Version 2.1   2014-11-29 Production working version. Requires ROOT 5.34/19,
                          XRootD 4.1.0, SL(C)6, & GCC 4.8.
 

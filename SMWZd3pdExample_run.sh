@@ -115,7 +115,9 @@ tar xzf ${work_dir}/SMWZd3pdExample.lib.tgz
 
 sed -n ${first_line},${last_line}p ${work_dir}/${input_file} > ${work_dir}/${input_seq_file}
 /bin/cat ${work_dir}/${input_seq_file}
-bin/SMWZd3pdExample -f ${work_dir}/${input_seq_file} -o ${work_dir}/${output_seq_file}
+cd ${work_dir}/run
+../bin/SMWZd3pdExample -f ${work_dir}/${input_seq_file} -o ${work_dir}/${output_seq_file}
+cd ..
 rm -f ${work_dir}/${input_seq_file}
 
 # Show final set of files.

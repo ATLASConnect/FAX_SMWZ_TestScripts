@@ -1,16 +1,23 @@
 FAX Testing Scripts for a Condor Queing System
 
+V2.1.1 Frederick Luehring 30-Nov-2014 Small changes so code will run under ROOT 6.
+                                      However ROOT 6 show same undesirable
+                                      behavior as 5.34/21 and 22. Committed
+                                      version compiled against ROOT 5.34/19,
+                                      XRootD 4.1.0, SL(C)6, and GCC 4.8.
+
 V2.1   Frederick Luehring 29-Nov-2014 Use XRootD 4.1.0  which works without
                                       problems. Commit version of code with minor
                                       edits for GCC 4.8 compatibility.
 
 V2.0   Frederick Luehring 19-Nov-2014 Second version of code that aborts if files
-                                      or events are skipped. Note that ROOT versions
-                                      5.34/21 and 5.34/22 had more read failures so
-                                      make ROOT 5.34/19 GCC 4.8, and XRootD 3.3.6
+                                      or events are skipped. Includes small modi-
+                                      fications needed to compile under GCC 4.8.
+                                      Noted that ROOT versions 5.34/21 and
+                                      5.34/22 had more read failures so made
+                                      ROOT 5.34/19 GCC 4.8, and XRootD 3.3.6
                                       the default.
 
-                                      Modify code to compile under GCC 4.8.
 
 V1.1.1 Frederick Luehring 23-Sep-2014 Minor cleaning and remove code from AFS.
 
