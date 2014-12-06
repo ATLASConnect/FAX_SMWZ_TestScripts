@@ -1,3 +1,5 @@
+Version 2.1.2 2014-12-06 Change XRootD version from 4.1.0 to 4.1.1.
+
 Version 2.1.1 2014-11-30 Small changes for ROOT 6 compatibility. Default
                          committed version is still ROOT 5.34/19,
 			 XRootD 4.1.0, SL(C)6, & GCC 4.8.
