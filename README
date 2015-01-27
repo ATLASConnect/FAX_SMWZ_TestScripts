@@ -1,6 +1,6 @@
 FAX Testing Scripts for a Condor Queing System and Verifying FAX Connectivity
 
-V2.0   Frederick Luehring 23-Dec-2014 Add possibility to run test jobs in
+V3.0   Frederick Luehring 23-Dec-2014 Add possibility to run test jobs in
                                       background to testing fax data access
                                       from any machine without submitting
                                       test jobs to a batch system.
