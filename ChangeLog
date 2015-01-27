@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 Version 3.0   2015-01-23 Add functionality to run jobs in background
 
+=======
+>>>>>>> parent of b1581ac... Add options that run jobs in the background instead submitting them to a batch system (currently condor).
 Version 2.1.2 2014-12-06 Change XRootD version from 4.1.0 to 4.1.1.
 
 Version 2.1.1 2014-11-30 Small changes for ROOT 6 compatibility. Default
