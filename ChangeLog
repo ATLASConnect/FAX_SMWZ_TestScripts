@@ -1,5 +1,14 @@
+Version 4.1  2015-03-05 Add simple check to see if FAX connectivity test was successful
+                        Clean names of variables used to measure elapsed times.
+
+Version 4.0  2015-02-03 Add wrapper script for testing FAX connectivity
+                        and remove $RUCIO_ACCOUNT from most scripts.
+<<<<<<< HEAD
 <<<<<<< HEAD
 Version 3.0   2015-01-23 Add functionality to run jobs in background
+=======
+Version 2.2   2015-01-23 Add functionality to run jobs in background
+>>>>>>> parent of 715ae6a... Add options that run jobs in the background instead submitting them to a batch system (currently condor).
 
 =======
 >>>>>>> parent of b1581ac... Add options that run jobs in the background instead submitting them to a batch system (currently condor).

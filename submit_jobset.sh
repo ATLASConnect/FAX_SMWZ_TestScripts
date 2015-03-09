@@ -8,10 +8,9 @@
 # -r ROOT version (default current-SL6)
 # -x XRootD Version needed for FAX data access (default current-SL6)
 # -X X509_USER_PROXY needed for FAX data access and condor flocking (defualt /tmp/x509up_u<uid>)
-# -R RUCIO_ACCOUNT needed for FAX data accecc (default $USER)
-function HelpSubmitJobset() { echo "source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j job_type -r root_version -x xrootd_version -X X509_USER_PROXY -R RUCIO_ACCOUNT -h Print this help message" ; }
+function HelpSubmitJobset() { echo "source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j job_type -r root_version -x xrootd_version -X X509_USER_PROXY -h Print this help message" ; }
 
-start=`date +%s`
+submit_time=`date +%s`
 
 working_directory=.
 number_of_jobs=1
@@ -47,27 +46,23 @@ while [ "$#" -gt "0" ]; do
       xrootd_version=${1}
       ;;
     -X)
-       shift
-       export X509_USER_PROXY=${1}
-       ;;
-    -R)
       shift
-      export RUCIO_ACCOUNT=${1}
+      export X509_USER_PROXY=${1}
       ;;
     -h)
-       HelpSubmitJobset
-       return 0
-       ;;
+      HelpSubmitJobset
+      return 0
+      ;;
     *)
-       echo "Syntax Error"
-       HelpSubmitJobset
-       return 1
-       ;;
+      echo "Syntax Error"
+      HelpSubmitJobset
+      return 1
+      ;;
   esac
   shift
 done
 
-echo ${working_directory} ${number_of_jobs} ${input_file_type} ${job_type} ${root_version} ${xrootd_version} ${X509_USER_PROXY} ${RUCIO_ACCOUNT}
+echo ${working_directory} ${number_of_jobs} ${input_file_type} ${job_type} ${root_version} ${xrootd_version} ${X509_USER_PROXY}
 
 if [[ ${job_type} -lt 1 || ${job_type} -gt 6 ]]; then
   echo "Job type code out of range - should be 1-6"
@@ -77,9 +72,9 @@ fi
 if [[ ${job_type} -eq 2 || ${job_type} -eq 3 ||  ${job_type} -eq 4 || ${job_type} -eq 6 ]]; then
 
   if [[ -e ${X509_USER_PROXY} ]]; then
-    proxycreatetime=`date -r ${X509_USER_PROXY} +%s`
-    let "elapsed = start - proxycreatetime"
-    if [[ ${elapsed} -gt 172800 ]]; then
+    proxy_create_time=`date -r ${X509_USER_PROXY} +%s`
+    let "elapsed_time = submit_time - proxy_create_time"
+    if [[ ${elapsed_time} -gt 28800 ]]; then
       echo "Proxy too old - renew proxy."
       return 1
     fi
@@ -106,9 +101,9 @@ if [[ ${job_type} -ge 1 && ${job_type} -le 4 ]]; then # condor submission
   export Job_Type=${job_type}
   export ROOT_Version=${root_version}
   export XRootD_Version=${xrootd_version}
-  export Start=${start}
+  export Submit_Time=${submit_time}
 else # put jobs in background
-  export ClusterId=${start}
+  export ClusterId=${submit_time}
 fi
 
 mkdir ${working_directory}/
@@ -142,7 +137,7 @@ case "${job_type}" in
     while [ ${i} -lt ${number_of_jobs} ]; do
       export ProcId=${i}
       let "TaskId = i + 1"
-      source SMWZd3pdExample_run.sh ${input_file_type} ${job_type} ${start} ${root_version} dummy0 dummy1 dummy2 >& SMWZd3pdExample_${input_file_type}_${ClusterId}_"`printf %04u ${TaskId}`".log &
+      source SMWZd3pdExample_run.sh ${input_file_type} ${job_type} ${submit_time} ${root_version} >& SMWZd3pdExample_${input_file_type}_${ClusterId}_"`printf %04u ${TaskId}`".log &
       let "i = i + 1"
     done
     ;;
@@ -152,7 +147,7 @@ case "${job_type}" in
     while [ ${i} -lt ${number_of_jobs} ]; do
       export ProcId=${i}
       let "TaskId = i + 1"
-      source SMWZd3pdExample_run.sh ${input_file_type} ${job_type} ${start} ${root_version} ${xrootd_version} x509_Proxy ${RUCIO_ACCOUNT} >& SMWZd3pdExample_${input_file_type}_${ClusterId}_"`printf %04u ${TaskId}`".log &
+      source SMWZd3pdExample_run.sh ${input_file_type} ${job_type} ${submit_time} ${root_version} ${xrootd_version} x509_Proxy >& SMWZd3pdExample_${input_file_type}_${ClusterId}_"`printf %04u ${TaskId}`".log &
       let "i = i + 1"
     done
     ;;

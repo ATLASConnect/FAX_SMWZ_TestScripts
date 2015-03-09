@@ -5,7 +5,7 @@ HelpFAX() { echo "source setup_fax.sh -X X509_USER_PROXY -R RUCIO_ACCOUNT -r roo
 x509_proxy="/tmp/x509_Proxy"_${USER}
 rucio_account=${USER}
 root_version="current-SL6"
-xrootd_version="current-SL6"
+xrootd_version=""
 
 while [ "$#" -gt "0" ]
 do
@@ -42,5 +42,9 @@ done
 echo ${root_version} ${xrootd_version} ${rucio_account} ${x509_proxy}
 export X509_USER_PROXY=${x509_proxy}
 export RUCIO_ACCOUNT=${rucio_account}
-localSetupFAX --rootVersion=${root_version} --xrootdVersion=${xrootd_version}
+if [[ -n ${xrootd_version} ]]; then
+  localSetupFAX --rootVersion=${root_version} --xrootdVersion=${xrootd_version}
+else
+  localSetupFAX --rootVersion=${root_version}
+fi
 localSetupPandaClient --noAthenaCheck

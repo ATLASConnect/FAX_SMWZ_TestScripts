@@ -1,3 +1,18 @@
+FAX Testing Scripts for a Condor Queing System and Verifying FAX Connectivity
+
+V4.1   Frederick Luehring 05-Mar-2015 Add simple test that FAX connectivity test
+                                      succeeded. Clean up names of variables
+                                      used to calculate elapsed times.
+
+V4.0   Frederick Luehring 03-Feb-2015 Add wrapper script
+                                      test_fax_connectivity.sh
+                                      to submit N jobs running in the
+                                      background reading data from FAX
+                                      from a single server at a site.
+
+                                      Remove unneeded references to
+                                      $RUCIO_ACCOUNT from most scripts.
+
 <<<<<<< HEAD
 FAX Testing Scripts for a Condor Queing System and Verifying FAX Connectivity
 
@@ -86,6 +101,27 @@ source ~/setup_fax.sh -r 5.34.19-x86_64-slc6-gcc48-opt -x 4.1.1-x86_64-slc6
 
 adding the -R option to set the RUCIO username as needed and the -X option
 to point at the X.509 proxy file if it is not at the default path.
+NB: RUCIO_ACCOUNT is *not* needed for test scripts - it is only needed to
+use the DQ2 and RUCIO clients.
+
+Standalone Test of FAX Connectivity
+===================================
+
+> ./test_fax_connectivity -n number_of_jobs
+
+where:
+
+# -n Number of Jobs (default 1)
+
+Puts number_of_jobs in the background reading remote files using FAX. Typically
+number_of_jobs would be set to the number of cores or the number of cores with
+hyper-threading. This runs a few minute (~4-8 minutes depending on the speed of
+the connection to the wide area network and the speed of the cores in the 
+server running the test). When the test terminates a simple check of the log files
+produced by the test jobs is made to see data was transfered successfully. One
+can edit the log files of the test jobs to see additional informatin on how fast
+data was transfered. NB: As with any distribured data storage system, the test
+jobs can fail for reasons not associated with local problems.
 
 Running Locally on Local Files
 ==============================
@@ -116,7 +152,7 @@ files are put.
 Running Locally on FAX Files
 ============================
 
-> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 2 -r root_version -x xrootd_version -X X509_USER_PROXY -R RUCIO_ACCOUNT
+> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 2 -r root_version -x xrootd_version -X X509_USER_PROXY
 
 where:
 
@@ -127,7 +163,6 @@ where:
 # -r ROOT version (default current-SL6)
 # -x XRootD Version (default current-SL6)
 # -X X509_USER_PROXY (defualt /tmp/x509up_u<uid>)
-# -R RUCIO_ACCOUNT (default $USER)
 
 A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
 Please set the tye Job Type to 2 - for example:
@@ -151,7 +186,7 @@ The 260 TB is after decompression - the file occupy just over 90 TB compressed.
 Flocking to MWT2 Running on FAX Files
 =====================================
 
-> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 3 -r root_version -x xrootd_version -X X509_USER_PROXY -R RUCIO_ACCOUNT
+> source submit_jobset.sh -w working_directory -n number_of_jobs -i input_file_type -j 3 -r root_version -x xrootd_version -X X509_USER_PROXY
 
 where:
 
@@ -162,7 +197,6 @@ where:
 # -r ROOT version (default current-SL6)
 # -x XRootD Version (default current-SL6)
 # -X X509_USER_PROXY (defualt /tmp/x509up_u<uid>)
-# -R RUCIO_ACCOUNT (default $USER)
 
 A valid proxy with a reasonable remaing lifetime must be in $X509_USER_PATH.
 Please set the tye Job Type to 3 - for example:

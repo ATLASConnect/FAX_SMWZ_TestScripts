@@ -1,20 +1,22 @@
 #!/bin/sh
 # $1 Input file type
-# $2 1 local condor, local files, 2 local condor, FAX files, 3 condor flocking via Bosco,
-#    4 ATLAS Connect, 5 background jobs, local files, 6 background jobs, FAX files
-# $3 Start time of job submission script
+# $2 Job Type:  1 local batch using condor, local files, 2 local batch using condor, FAX files, 3 condor flocking using Bosco,
+#               4 ATLAS Connect, 5 local background jobs, local files, 6 local background jobs, FAX files (default 3)
+# $3 Submission time of job submission script
 # $4 ROOT version
 # $5 XRootD version (needed for FAX data access)
 # $6 X509_USER_PATH (needed for FAX data access and condor flocking)
-# $7 RUCIO_ACCOUNT (needed for fax data access)
 
 # Setup to get run time of this script.
-start=`date +%s`
-let "elapsed = start - ${3}"
-echo "Startup wait time(s):" $elapsed
+start_time=`date +%s`
+let "elapsed_time = start_time - ${3}"
+echo "Startup wait time(s):" $elapsed_time
 echo
-echo "Input Arguments:" ${1} ${2} ${3} ${4} ${5} ${6} ${7}
-echo
+if [[ $# == 6 ]]; then
+  echo "Input Arguments:" ${1} ${2} ${3} ${4} ${5} ${6}
+else
+  echo "Input Arguments:" ${1} ${2} ${3} ${4}
+fi
 
 # Record Environment
 echo "Environment"
@@ -79,9 +81,8 @@ case "${2}" in
     cd ${padded_task_id}/
     ;;
   2) # local condor, FAX data access
-    # Setup FAX (Sets up EMI, FAX, RUCIO, ROOT, XRootD)
+    # Setup FAX (Sets up EMI, FAX,  ROOT, XRootD)
     export X509_USER_PROXY=${PWD}/${6}
-    export RUCIO_ACCOUNT=${7}
     localSetupFAX --rootVersion=${4} --xrootdVersion=${5} --skipConfirm
     # Confirm the grid proxy is available.
     voms-proxy-info --all
@@ -89,17 +90,15 @@ case "${2}" in
     cd ${padded_task_id}/
     ;;
   3) # condor flocking, FAX data access
-    # Setup FAX (Sets up EMI, FAX, RUCIO, ROOT, XRootD)
+    # Setup FAX (Sets up EMI, FAX, ROOT, XRootD)
     export X509_USER_PROXY=${PWD}/${6}
-    export RUCIO_ACCOUNT=${7}
     localSetupFAX --rootVersion=${4} --xrootdVersion=${5} --skipConfirm
     # Confirm the grid proxy is available.
     voms-proxy-info --all
     ;;
   4) # ATLAS connect, FAX data access
-    # Setup FAX (Sets up EMI, FAX, RUCIO, ROOT, XRootD)
+    # Setup FAX (Sets up EMI, FAX, ROOT, XRootD)
     export X509_USER_PROXY=${PWD}/${6}
-    export RUCIO_ACCOUNT=${7}
     localSetupFAX --rootVersion=${4} --xrootdVersion=${5} --skipConfirm
     # Confirm the grid proxy is available.
     voms-proxy-info --all
@@ -115,9 +114,8 @@ case "${2}" in
     cd ${padded_task_id}/
     ;;
   6) # background jobs, FAX data access
-    # Setup FAX (Sets up EMI, FAX, RUCIO, ROOT, XRootD)
+    # Setup FAX (Sets up EMI, FAX, ROOT, XRootD)
     export X509_USER_PROXY=${PWD}/${6}
-    export RUCIO_ACCOUNT=${7}
     localSetupFAX --rootVersion=${4} --xrootdVersion=${5} --skipConfirm
     # Confirm the grid proxy is available.
     voms-proxy-info --all
@@ -182,6 +180,6 @@ esac
 
 # Print elapsed times for entire process and actual running of the example"
 echo
-end=`date +%s`
-let "elapsed = end - start"
-echo "Execution time(s):" ${elapsed}
+end_time=`date +%s`
+let "elapsed_time = end_time - start_time"
+echo "Execution time(s):" ${elapsed_time}
